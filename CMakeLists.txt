@@ -1,23 +1,27 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(music-adapters CXX C)
+project(ros-music-adapter)
 
 # add modules for finding JSONCPP, ZMQ and MUSIC
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
+# generates catkin_INCLUDE_DIRS and catkin_LIBRARIES for all components
+
+find_package(catkin REQUIRED
+    COMPONENTS
+    roscpp
+    roscpp_serialization
+    rosconsole
+    rostime
+)
 
 find_package(MUSIC REQUIRED)
 find_package(JSONCPP REQUIRED)
 find_package(MPI REQUIRED)
 find_package(ZMQ REQUIRED)
 find_package(MUSICADAPTER REQUIRED)
-find_package(roscpp
-             roscpp_serialization
-             rosconsole
-             rostime REQUIRED)
-
+ 
 catkin_package(
     CATKIN_DEPENDS
-        dvs_msgs
         roscpp
         roscpp_serialization
         rosconsole
@@ -35,6 +39,7 @@ include_directories(
     ${MPI_INCLUDE_PATH}
     ${ZMQ_INCLUDE_DIRS}
     ${MUSICADAPTER_INCLUDE_DIRS}
+    ${catkin_INCLUDE_DIRS}
 )
 
 
