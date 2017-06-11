@@ -1,14 +1,15 @@
-#ifndef ROS_IN_PORT_H
-#define ROS_IN_PORT_H
+#ifndef ROS_OUT_PORT_H
+#define ROS_OUT_PORT_H
 
 #include <music.hh>
-#include "InPort.h"
+#include "OutPort.h"
 
 #include <ros/ros.h>
 
 #define DEBUG_OUTPUT false 
 
-class ROSInPort : public InPort
+
+class ROSOutPort : public OutPort
 {
 
     public:
@@ -23,6 +24,6 @@ class ROSInPort : public InPort
 
 };
 
-#endif // ROS_IN_PORT_H 
+#endif // ROS_OUT_PORT_H 
 
 

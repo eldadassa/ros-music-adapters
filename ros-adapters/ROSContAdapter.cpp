@@ -74,7 +74,7 @@ ROSContAdapter::asyncTick()
 void
 ROSContAdapter::laserscanCallback(const sensor_msgs::LaserScanConstPtr& msg)
 {
-    for (int i = 0; i < msg->ranges.size(); ++i)
+    for (unsigned int i = 0; i < msg->ranges.size(); ++i)
     {
       // scale data between -1 and 1
       // TODO: catch exception if ranges.size not width of port
@@ -93,7 +93,7 @@ ROSContAdapter::twistCallback(const geometry_msgs::Twist msg)
 
     port_out->data[0] = msg.linear.x;
     port_out->data[1] = msg.angular.z;
-    for (unsigned int i = 0; i < 2; ++i) // Twist msg has 2 dimensions
+    for (int i = 0; i < 2; ++i) // Twist msg has 2 dimensions
     {
         // limit data between -1 and 1
         if (port_out->data[i] > 1)
@@ -109,7 +109,7 @@ void
 ROSContAdapter::float64MultiArrayCallback(const std_msgs::Float64MultiArray msg)
 {
 
-    for (unsigned int i = 0; i < port_out->data_size; ++i)
+    for (int i = 0; i < port_out->data_size; ++i)
     {
         port_out->data[i] = msg.data[i];
     }

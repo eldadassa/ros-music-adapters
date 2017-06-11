@@ -16,11 +16,4 @@ ROSInPort::initROS(int argc, char** argv)
     ros::start();
 }
 
-template<class M, class T>
-void
-ROSInPort::subscribe(std::string topic, void(T::*fp)(M)){
-    ros_node.subscribe(topic, 1000, fp, this);
-}
-
-
 

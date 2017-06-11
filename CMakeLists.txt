@@ -52,20 +52,24 @@ find_library(GSL gsl REQUIRED)
 find_library(BLAS gslcblas REQUIRED)
 find_library(PTHREAD pthread REQUIRED)
 
-add_library(rosmusicadapter SHARED base/ROSInPort.cpp)
+add_library(rosmusicadapter SHARED base/ROSInPort.cpp
+                                   base/ROSOutPort.cpp)
 include_directories(base/)
 
 
 # Adapters
 add_executable(ros_cont_adapter ros-adapters/ROSContAdapter.cpp)
+add_executable(cont_ros_adapter ros-adapters/ContROSAdapter.cpp)
 
 target_link_libraries(ros_cont_adapter rosmusicadapter ${catkin_LIBRARIES} ${MUSICADAPTER_LIBRARIES} ${ZMQ_LIBRARIES} ${MUSIC_LIBRARIES} ${PTHREAD} ${MPI_LIBRARIES} ${JSONCPP_LIBRARY})
+target_link_libraries(cont_ros_adapter rosmusicadapter ${catkin_LIBRARIES} ${MUSICADAPTER_LIBRARIES} ${ZMQ_LIBRARIES} ${MUSIC_LIBRARIES} ${PTHREAD} ${MPI_LIBRARIES} ${JSONCPP_LIBRARY})
 
 
 # INSTALL
 
 install(TARGETS
     ros_cont_adapter
+    cont_ros_adapter
     rosmusicadapter
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib 
@@ -73,6 +77,7 @@ install(TARGETS
 
 install(FILES
     base/ROSInPort.h
+    base/ROSOutPort.h
     DESTINATION include 
 )
 
