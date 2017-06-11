@@ -33,8 +33,10 @@ class ROSContAdapter : public Adapter
     private:
         msg_types msg_type;
         std::string ros_topic;
+        std::string ros_node_name;
         RTClock* clock;
         double sensor_update_rate;
+        ros::Subscriber sub;
 
         void laserscanCallback(const sensor_msgs::LaserScanConstPtr& msg);
         void twistCallback(const geometry_msgs::Twist msg);

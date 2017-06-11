@@ -36,14 +36,17 @@ class ContROSAdapter : public Adapter
     private:
         msg_types msg_type;
         std::string ros_topic;
+        std::string ros_node_name;
         RTClock* clock;
         double command_update_rate;
         string mapping_filename;
         Json::Value json_mapping; 
-        int* msg_map;
+        double* msg_map[6];
+        double null;
 	    double min_msg;
   	    double max_msg;
         ros::Publisher publisher;
+
 
         void readMappingFile();
         void sendROS();

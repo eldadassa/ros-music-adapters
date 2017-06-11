@@ -24,7 +24,6 @@ void ContROSAdapter::init(int argc, char** argv)
 {
 
     Adapter::init(argc, argv);
-    static_cast<ROSOutPort*>(port_out)->initROS(argc, argv);
 
     // config needed for this specific adapter
     
@@ -32,24 +31,27 @@ void ContROSAdapter::init(int argc, char** argv)
     setup->config("message_type", &_msg_type);
     setup->config("ros_topic", &ros_topic);
     setup->config("command_update_rate", &command_update_rate);
-
+    setup->config("ros_node_name", &ros_node_name);
     setup->config("message_mapping_filename", &mapping_filename);
     readMappingFile();
+
+    static_cast<ROSOutPort*>(port_out)->initROS(argc, argv, ros_node_name.c_str());
     
     switch (msg_type)
     {   
         case Float64MultiArray:
         {
-            publisher = static_cast<ROSOutPort*>(port_out)->ros_node.advertise<std_msgs::Float64MultiArray>(ros_topic, 1);
+            publisher = static_cast<ROSOutPort*>(port_out)->ros_node->advertise<std_msgs::Float64MultiArray>(ros_topic, 1);
             break;
         }
         case Twist: 
         {
-            publisher = static_cast<ROSOutPort*>(port_out)->ros_node.advertise<geometry_msgs::Twist>(ros_topic, 1);
+            publisher = static_cast<ROSOutPort*>(port_out)->ros_node->advertise<geometry_msgs::Twist>(ros_topic, 1);
             break;
         }
     }
 
+    std::cout << command_update_rate <<  " cmd " << 1./ (command_update_rate * rtf) << std::endl;
     clock = new RTClock( 1. / (command_update_rate * rtf) );
 }
 
@@ -61,6 +63,8 @@ ContROSAdapter::tick()
 void
 ContROSAdapter::asyncTick()
 {
+    //std::cout << "cont ros atick " << std::endl; 
+    sendROS();
     ros::spinOnce();
     clock->sleepNext();
 }
@@ -97,13 +101,13 @@ ContROSAdapter::sendROS ()
 
           geometry_msgs::Twist msg;
           
-          msg.linear.x = port_in->data[msg_map[0]];
-          msg.linear.y = port_in->data[msg_map[1]];
-          msg.linear.z = port_in->data[msg_map[2]];
+          msg.linear.x = *msg_map[0];
+          msg.linear.y = *msg_map[1];
+          msg.linear.z = *msg_map[2];
 
-          msg.angular.x = port_in->data[msg_map[3]];
-          msg.angular.y = port_in->data[msg_map[4]];
-          msg.angular.z = port_in->data[msg_map[5]];
+          msg.angular.x = *msg_map[3];
+          msg.angular.y = *msg_map[4];
+          msg.angular.z = *msg_map[5];
      
           publisher.publish(msg);
           break;
@@ -154,11 +158,14 @@ ContROSAdapter::readMappingFile()
             const size_t n_components = sizeof(components) / sizeof(components[0]);
             
             msg_type = Twist;
-            msg_map = new int[n_components];
+            null = 0;
 
             for (size_t index = 0; index < n_components; index++)
             {
-                msg_map[index] = json_mapping["mapping"].get(components[index], -1).asInt() + 1;
+                msg_map[index] = &null;
+                if (json_mapping["mapping"].isMember(components[index])){
+                    msg_map[index] = &(port_in->data[json_mapping["mapping"].get(components[index], -1).asInt()]);
+                }
             }
 
             min_msg = 0;

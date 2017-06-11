@@ -12,14 +12,13 @@ class ROSInPort : public InPort
 {
 
     public:
-        ros::NodeHandle ros_node;
+        ros::NodeHandle* ros_node;
 
         void init(MUSIC::Setup* setup, char* port_name);
-        void initROS(int argc, char** argv);
+        void initROS(int argc, char** argv, std::string port_name);
         
 
     private:
-        char* port_name;
 
 };
 

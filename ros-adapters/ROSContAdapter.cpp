@@ -3,6 +3,7 @@
 int
 main(int argc, char** argv)
 {
+    std::cout << "ros cont adapter startup" << std::endl;
 
     ROSContAdapter* adapter = new ROSContAdapter();
     adapter->init(argc, argv);
@@ -22,9 +23,9 @@ ROSContAdapter::ROSContAdapter()
 
 void ROSContAdapter::init(int argc, char** argv)
 {
+    std::cout << "ros cont adapter init" << std::endl;
 
     Adapter::init(argc, argv);
-    static_cast<ROSInPort*>(port_in)->initROS(argc, argv);
 
     // config needed for this specific adapter
     
@@ -32,22 +33,25 @@ void ROSContAdapter::init(int argc, char** argv)
     setup->config("message_type", &_msg_type);
     setup->config("ros_topic", &ros_topic);
     setup->config("sensor_update_rate", &sensor_update_rate);
+    setup->config("ros_node_name", &ros_node_name);
+
+    static_cast<ROSInPort*>(port_in)->initROS(argc, argv, ros_node_name);
 
     if (_msg_type.compare("Laserscan") == 0){
         msg_type = Laserscan;
-        static_cast<ROSInPort*>(port_in)->ros_node.subscribe(ros_topic, 1000, &ROSContAdapter::laserscanCallback, this);
+        sub = static_cast<ROSInPort*>(port_in)->ros_node->subscribe(ros_topic, 1000, &ROSContAdapter::laserscanCallback, this);
     }
     else if (_msg_type.compare("Twist") == 0){
         msg_type = Twist;
-        static_cast<ROSInPort*>(port_in)->ros_node.subscribe(ros_topic, 1000, &ROSContAdapter::twistCallback, this);
+        sub = static_cast<ROSInPort*>(port_in)->ros_node->subscribe(ros_topic, 1000, &ROSContAdapter::twistCallback, this);
     }
     else if (_msg_type.compare("FloatArray") == 0){
         msg_type = Float64MultiArray;
-        static_cast<ROSInPort*>(port_in)->ros_node.subscribe(ros_topic, 1000, &ROSContAdapter::float64MultiArrayCallback, this);
+        sub = static_cast<ROSInPort*>(port_in)->ros_node->subscribe(ros_topic, 1000, &ROSContAdapter::float64MultiArrayCallback, this);
     }
     else if (_msg_type.compare("Odom") == 0){
         msg_type = Odom;
-        static_cast<ROSInPort*>(port_in)->ros_node.subscribe(ros_topic, 1000, &ROSContAdapter::odomCallback, this);
+        sub = static_cast<ROSInPort*>(port_in)->ros_node->subscribe(ros_topic, 1000, &ROSContAdapter::odomCallback, this);
     }
     else
     {
@@ -56,6 +60,7 @@ void ROSContAdapter::init(int argc, char** argv)
     }
     
 
+    std::cout << "sensor " << sensor_update_rate << std::endl;
     clock = new RTClock( 1. / (sensor_update_rate * rtf) );
 }
 
@@ -67,6 +72,7 @@ ROSContAdapter::tick()
 void
 ROSContAdapter::asyncTick()
 {
+
     ros::spinOnce();
     clock->sleepNext();
 }
@@ -130,7 +136,8 @@ ROSContAdapter::odomCallback(const nav_msgs::Odometry::ConstPtr& msg)
         port_out->data[2] = msg->pose.pose.position.z;
     }
 
-}
+
+   }
 
 
 
