@@ -2,10 +2,9 @@
 #define ROS_IN_PORT_H
 
 #include <music.hh>
-#include <ros/ros.h>
 #include "InPort.h"
 
-#include "jsoncpp/json/json.h"
+#include <ros/ros.h>
 
 #define DEBUG_OUTPUT false 
 
@@ -17,9 +16,16 @@ class ROSInPort : public InPort
 {
 
     public:
+        ros::NodeHandle ros_node;
+
         void init(MUSIC::Setup* setup, char* port_name);
+        void initROS(int argc, char** argv);
+        
+        template<class M, class T>
+        void subscribe(std::string topic, void(T::*fp)(M));
 
     private:
+        char* port_name;
 
 };
 

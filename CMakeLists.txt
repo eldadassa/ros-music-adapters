@@ -66,6 +66,7 @@ target_link_libraries(ros_cont_adapter rosmusicadapter ${catkin_LIBRARIES} ${MUS
 
 install(TARGETS
     ros_cont_adapter
+    rosmusicadapter
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib 
 )
