@@ -23,6 +23,7 @@ ContROSAdapter::ContROSAdapter()
 void ContROSAdapter::init(int argc, char** argv)
 {
 
+    std::cout << "cont ros adapter init" << std::endl;
     Adapter::init(argc, argv);
 
     // config needed for this specific adapter
@@ -77,7 +78,7 @@ ContROSAdapter::sendROS ()
       case Float64MultiArray:
       {
           std_msgs::Float64MultiArray msg;
-          for (int i = 1; i < port_in->data_size+1; ++i)
+          for (int i = 0; i < port_in->data_size; ++i)
           {
               msg.data.push_back(port_in->data[i]);
           }
@@ -87,7 +88,7 @@ ContROSAdapter::sendROS ()
 
       case Twist: 
       {
-          for (int i = 1; i < port_in->data_size+1; ++i)
+          for (int i = 0; i < port_in->data_size; ++i)
           {
               if (port_in->data[i] > max_msg)
               {

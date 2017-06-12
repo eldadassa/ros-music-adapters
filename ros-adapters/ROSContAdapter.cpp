@@ -3,7 +3,6 @@
 int
 main(int argc, char** argv)
 {
-    std::cout << "ros cont adapter startup" << std::endl;
 
     ROSContAdapter* adapter = new ROSContAdapter();
     adapter->init(argc, argv);
