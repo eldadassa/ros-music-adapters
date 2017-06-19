@@ -24,6 +24,10 @@
 enum msg_types {Float64MultiArray, Twist};
 
 const msg_types DEFAULT_MESSAGE_TYPE = Float64MultiArray;
+const std::string DEFAULT_ROS_TOPIC = "/cmd_vel";
+const double DEFAULT_COMMAND_UPDATE_RATE = 20.;
+const std::string DEFAULT_ROS_NODE_NAME = "cmd_out";
+const std::string DEFAULT_MAPPING_FILENAME = "mapping.json";
 
 class ContROSAdapter : public Adapter
 {

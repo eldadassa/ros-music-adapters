@@ -22,9 +22,8 @@ ROSContAdapter::ROSContAdapter()
 
 void ROSContAdapter::init(int argc, char** argv)
 {
-    std::cout << "ros cont adapter init" << std::endl;
 
-    Adapter::init(argc, argv);
+    Adapter::init(argc, argv, "ROSCont");
 
     // config needed for this specific adapter
     
@@ -59,7 +58,6 @@ void ROSContAdapter::init(int argc, char** argv)
     }
     
 
-    std::cout << "sensor " << sensor_update_rate << std::endl;
     clock = new RTClock( 1. / (sensor_update_rate * rtf) );
 }
 

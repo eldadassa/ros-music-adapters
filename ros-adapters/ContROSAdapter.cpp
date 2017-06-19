@@ -23,8 +23,13 @@ ContROSAdapter::ContROSAdapter()
 void ContROSAdapter::init(int argc, char** argv)
 {
 
-    std::cout << "cont ros adapter init" << std::endl;
-    Adapter::init(argc, argv);
+    msg_type = DEFAULT_MESSAGE_TYPE;
+    ros_topic = DEFAULT_ROS_TOPIC;
+    command_update_rate = DEFAULT_COMMAND_UPDATE_RATE;
+    ros_node_name = DEFAULT_ROS_NODE_NAME;
+    mapping_filename = DEFAULT_MAPPING_FILENAME;
+
+    Adapter::init(argc, argv, "ContROS");
 
     // config needed for this specific adapter
     
@@ -52,7 +57,6 @@ void ContROSAdapter::init(int argc, char** argv)
         }
     }
 
-    std::cout << command_update_rate <<  " cmd " << 1./ (command_update_rate * rtf) << std::endl;
     clock = new RTClock( 1. / (command_update_rate * rtf) );
 }
 
@@ -64,7 +68,6 @@ ContROSAdapter::tick()
 void
 ContROSAdapter::asyncTick()
 {
-    //std::cout << "cont ros atick " << std::endl; 
     sendROS();
     ros::spinOnce();
     clock->sleepNext();
