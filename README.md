@@ -1,5 +1,3 @@
-# ros-music-adapters
-
 ros-music-adapters
 ==============
 
