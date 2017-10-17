@@ -1,0 +1,9 @@
+<launch>
+
+    <node name="gazebo" pkg="gazebo_ros" type="gzserver" args="$(find ros-music-adapter)/examples/braitenberg3/sdf/demo_world.sdf use_sim_time:=true" respawn="false" output="screen"> 
+
+     <param name="use_sim_time" type="bool" value="true" />
+    </node>
+
+
+</launch>
