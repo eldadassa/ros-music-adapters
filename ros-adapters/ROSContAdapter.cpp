@@ -43,7 +43,7 @@ void ROSContAdapter::init(int argc, char** argv)
         msg_type = Twist;
         sub = static_cast<ROSInPort*>(port_in)->ros_node->subscribe(ros_topic, 1000, &ROSContAdapter::twistCallback, this);
     }
-    else if (_msg_type.compare("FloatArray") == 0){
+    else if (_msg_type.compare("Float64MultiArray") == 0){
         msg_type = Float64MultiArray;
         sub = static_cast<ROSInPort*>(port_in)->ros_node->subscribe(ros_topic, 1000, &ROSContAdapter::float64MultiArrayCallback, this);
     }
