@@ -21,7 +21,7 @@ music_timestep=0.001
   rate_max=200
 [nest]
   binary=./braitenberg3_pyNEST.py
-  args=-s 0.001 -t 1000 -n 2
+  args=
   np=1
 [decoder]
   binary=linear_decoder
